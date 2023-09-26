@@ -32,7 +32,7 @@ public class LegalEntity {
     @Size(max = 50, message = "Contact's name must not exceed 50 characters")
     private String contactName; // máximo de 50 caracteres
 
-    @Pattern(regexp = "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-.]+)\\.([a-zA-Z]{2,5})$", message = "Contact's name must be a valid e-mail")
+    @Pattern(regexp = "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-.]+)\\.([a-zA-Z]{2,5})$", message = "Contact's e-mail must be a valid e-mail")
     private String contactEmail; // expressão regular para
                                  // validação: "^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-.]+)\.([a-zA-Z]{2,5})$"
 
