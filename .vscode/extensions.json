@@ -6,6 +6,8 @@
     "acheronfail.arithmetic",
     "ue.alphabetical-sorter",
     "streetsidesoftware.code-spell-checker",
-    "streetsidesoftware.code-spell-checker-portuguese-brazilian"
+    "streetsidesoftware.code-spell-checker-portuguese-brazilian",
+    "mhutchie.git-graph",
+    "eamodio.gitlens"
   ]
 }
