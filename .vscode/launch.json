@@ -9,8 +9,8 @@
       "name": "FeedbackApiApplication",
       "request": "launch",
       "mainClass": "com.adacielochallenge.ProspectApplication",
-      "projectName": "prospect-api",
-      "cwd": "${workspaceFolder}/prospect-api"
+      "projectName": "prospect",
+      "cwd": "${workspaceFolder}/prospect"
     }
   ]
 }
