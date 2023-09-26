@@ -5,6 +5,7 @@
   },
   "[java]": { "editor.defaultFormatter": "redhat.java" },
   "cSpell.words": ["Configurer"],
+  "cSpell.language": "en,pt,pt_BR",
   "java.autobuild.enabled": true,
   "java.compile.nullAnalysis.mode": "automatic",
   "java.completion.chain.enabled": true,
@@ -12,7 +13,6 @@
   "java.configuration.updateBuildConfiguration": "automatic",
   "java.edit.smartSemicolonDetection.enabled": true,
   "java.editor.reloadChangedSources": "auto",
-
   "java.maven.updateSnapshots": true,
   "maven.pomfile.autoUpdateEffectivePOM": true,
   "maven.view": "hierarchical"
