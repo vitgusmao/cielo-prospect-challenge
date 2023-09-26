@@ -1,8 +1,5 @@
 {
   "editor.formatOnSave": true,
-  "[xml]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
@@ -15,9 +12,7 @@
   "java.configuration.updateBuildConfiguration": "automatic",
   "java.edit.smartSemicolonDetection.enabled": true,
   "java.editor.reloadChangedSources": "auto",
-  "java.import.gradle.annotationProcessing.enabled": false,
-  "java.import.gradle.enabled": false,
-  "java.import.gradle.wrapper.enabled": false,
+
   "java.maven.updateSnapshots": true,
   "maven.pomfile.autoUpdateEffectivePOM": true,
   "maven.view": "hierarchical"

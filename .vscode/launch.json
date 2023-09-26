@@ -6,9 +6,9 @@
   "configurations": [
     {
       "type": "java",
-      "name": "FeedbackApiApplication",
+      "name": "ProspectApplication",
       "request": "launch",
-      "mainClass": "com.adacielochallenge.ProspectApplication",
+      "mainClass": "com.adacielochallenge.prospect.ProspectApplication",
       "projectName": "prospect",
       "cwd": "${workspaceFolder}/prospect"
     }
