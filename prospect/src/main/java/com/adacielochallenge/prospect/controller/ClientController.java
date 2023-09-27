@@ -1,6 +1,7 @@
 package com.adacielochallenge.prospect.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -78,9 +80,24 @@ public class ClientController {
 
     }
 
-    // @GetMapping("{id}")
-    // public void retrieve() {
-    // }
+    @Operation(summary = "Retrieve one detailed prospect")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved prospect by path variable {id}")
+    })
+    @GetMapping("{id}")
+    public ResponseEntity<String> retrieve(@PathVariable Long id) {
+        Optional<Client> client = clientService.retrieveClient(id);
+        if (client.isPresent()) {
+            try {
+                ObjectMapper objectMapper = new ObjectMapper();
+                return ResponseEntity.ok().body(objectMapper.writeValueAsString(client.get()));
+            } catch (JsonProcessingException e) {
+                LOG.error(e.getMessage());
+                return ResponseEntity.internalServerError().body("Erro processar retorno do cliente");
+            }
+        }
+        return ResponseEntity.notFound().build();
+    }
 
     // @PutMapping("{id}")
     // public void update() {

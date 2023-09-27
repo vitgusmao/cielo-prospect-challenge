@@ -1,6 +1,7 @@
 package com.adacielochallenge.prospect.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +54,12 @@ public class ClientService {
         List<Client> clientList = clientRepository.findAll();
 
         return clientList;
+    }
+
+    public Optional<Client> retrieveClient(long id) {
+        Optional<Client> client = clientRepository.findById(id);
+
+        return client;
     }
 
     private Boolean clientExists(ClientSubService subService, ClientCreateDTO clientCreateDTO) {
