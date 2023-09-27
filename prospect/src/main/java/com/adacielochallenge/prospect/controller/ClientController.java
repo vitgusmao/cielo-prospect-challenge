@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,6 +26,7 @@ import com.adacielochallenge.prospect.model.Client;
 import com.adacielochallenge.prospect.service.ClientService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -45,7 +47,7 @@ public class ClientController {
 
     @Operation(summary = "create a new legal entity prospect")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "successfully created a new legal entity prospect")
+            @ApiResponse(responseCode = "201", description = "successfully created a new legal entity prospect")
     })
     @PostMapping("/legal-entities")
     @Validated
@@ -53,18 +55,21 @@ public class ClientController {
         LOG.debug("create request arrived: %s".formatted(legalEntityCreateDTO.toString()));
         try {
             clientService.createLegalEntity(legalEntityCreateDTO);
-            return ResponseEntity.ok("successfully created a new client prospect.");
+            return new ResponseEntity<>(this.generateResponseMessageJson("successfully created a new client prospect."),
+                    HttpStatus.CREATED);
         } catch (DataIntegrityViolationException e) {
-            return ResponseEntity.badRequest().body("client prospect already exists.");
+            return ResponseEntity.badRequest()
+                    .body(this.generateResponseMessageJson("client prospect already exists."));
         } catch (Exception e) {
             LOG.error(e.getMessage());
-            return ResponseEntity.internalServerError().body("error creating a new client pre registration.");
+            return ResponseEntity.internalServerError()
+                    .body(this.generateResponseMessageJson("error creating a new client pre registration."));
         }
     }
 
     @Operation(summary = "create a new natural person prospect")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "successfully created a new prospect")
+            @ApiResponse(responseCode = "201", description = "successfully created a new natural person prospect")
     })
     @PostMapping("/natural-persons")
     @Validated
@@ -73,12 +78,15 @@ public class ClientController {
         LOG.debug("create request arrived: %s".formatted(naturalPersonCreateDTO.toString()));
         try {
             clientService.createNaturalPerson(naturalPersonCreateDTO);
-            return ResponseEntity.ok("successfully created a new client prospect.");
+            return new ResponseEntity<>(this.generateResponseMessageJson("successfully created a new client prospect."),
+                    HttpStatus.CREATED);
         } catch (DataIntegrityViolationException e) {
-            return ResponseEntity.badRequest().body("client prospect already exists.");
+            return ResponseEntity.badRequest()
+                    .body(this.generateResponseMessageJson("client prospect already exists."));
         } catch (Exception e) {
             LOG.error(e.getMessage());
-            return ResponseEntity.internalServerError().body("error creating a new client prospect.");
+            return ResponseEntity.internalServerError()
+                    .body(this.generateResponseMessageJson("error creating a new client prospect."));
         }
     }
 
@@ -97,7 +105,8 @@ public class ClientController {
             return ResponseEntity.ok(jsonString);
         } catch (JsonProcessingException e) {
             LOG.error(e.getMessage());
-            return ResponseEntity.internalServerError().body("Erro ao ler lista de clientes");
+            return ResponseEntity.internalServerError()
+                    .body(this.generateResponseMessageJson("Erro ao ler lista de clientes"));
         }
 
     }
@@ -114,12 +123,14 @@ public class ClientController {
             return ResponseEntity.ok().body(objectMapper.writeValueAsString(client));
         } catch (JsonProcessingException e) {
             LOG.error(e.getMessage());
-            return ResponseEntity.internalServerError().body("erro processar retorno do cliente");
+            return ResponseEntity.internalServerError()
+                    .body(this.generateResponseMessageJson("erro processar retorno do cliente"));
         } catch (EmptyResultDataAccessException e) {
             return ResponseEntity.notFound().build();
         } catch (Exception e) {
             LOG.error(e.getMessage());
-            return ResponseEntity.internalServerError().body("Ocorreu um erro inesperado.");
+            return ResponseEntity.internalServerError()
+                    .body(this.generateResponseMessageJson("Ocorreu um erro inesperado."));
         }
     }
 
@@ -133,14 +144,16 @@ public class ClientController {
         try {
             Client client = clientService.updateClient(id, clientUpdateDTO);
             if (client != null) {
-                return ResponseEntity.badRequest().body("corpo da requisição inválido");
+                return ResponseEntity.badRequest()
+                        .body(this.generateResponseMessageJson("corpo da requisição inválido"));
             }
-            return ResponseEntity.ok().body("prospect atualizado com sucesso");
+            return ResponseEntity.ok().body(this.generateResponseMessageJson("prospect atualizado com sucesso"));
         } catch (EmptyResultDataAccessException e) {
             return ResponseEntity.notFound().build();
         } catch (Exception e) {
             LOG.error(e.getMessage());
-            return ResponseEntity.internalServerError().body("ocorreu um erro inesperado.");
+            return ResponseEntity.internalServerError()
+                    .body(this.generateResponseMessageJson("ocorreu um erro inesperado."));
         }
     }
 
@@ -152,11 +165,27 @@ public class ClientController {
     public ResponseEntity<String> delete(@PathVariable Long id) {
         try {
             clientService.deleteClient(id);
-            return ResponseEntity.ok("successfully deleted prospect.");
+            return ResponseEntity.ok(this.generateResponseMessageJson("successfully deleted prospect."));
 
         } catch (Exception e) {
             LOG.error(e.getMessage());
-            return ResponseEntity.internalServerError().body("ocorreu um erro inesperado.");
+            return ResponseEntity.internalServerError()
+                    .body(this.generateResponseMessageJson("ocorreu um erro inesperado."));
+        }
+    }
+
+    private String generateResponseMessageJson(String message) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectNode jsonNode = objectMapper.createObjectNode();
+        jsonNode.put("message", message);
+
+        try {
+            String jsonString = objectMapper.writeValueAsString(jsonNode);
+            return jsonString;
+        } catch (JsonProcessingException e) {
+            String errorMessage = e.getMessage();
+            LOG.error(errorMessage);
+            return errorMessage;
         }
     }
 
