@@ -33,15 +33,8 @@ public class NaturalPersonClientSubService implements ClientSubService {
     }
 
     @Override
-    public Boolean isClientCreated(ClientCreateDTO clientCreateDTO) {
-        List<NaturalPerson> naturalPersons = naturalPersonRepository.findByCpf(clientCreateDTO.getCpf());
-
-        if (naturalPersons.size() > 0) {
-            return true;
-        }
-
-        return false;
-
+    public Boolean clientExists(ClientCreateDTO clientCreateDTO) {
+        return naturalPersonRepository.existsByCpf(clientCreateDTO.getCpf());
     }
 
 }

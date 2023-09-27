@@ -6,5 +6,5 @@ import com.adacielochallenge.prospect.model.Client;
 public interface ClientSubService {
     Client createClient(ClientCreateDTO clientCreateDTO);
 
-    Boolean isClientCreated(ClientCreateDTO clientCreateDTO);
+    Boolean clientExists(ClientCreateDTO clientCreateDTO);
 }

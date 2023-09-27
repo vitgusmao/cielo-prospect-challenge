@@ -8,4 +8,6 @@ import com.adacielochallenge.prospect.model.LegalEntity;
 
 public interface LegalEntityRepository extends CrudRepository<LegalEntity, Long> {
     List<LegalEntity> findByCnpj(String cnpj);
+
+    boolean existsByCnpj(String cnpj);
 }

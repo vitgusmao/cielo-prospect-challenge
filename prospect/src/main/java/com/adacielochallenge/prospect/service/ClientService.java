@@ -3,13 +3,12 @@ package com.adacielochallenge.prospect.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.adacielochallenge.prospect.dto.ClientCreateDTO;
 import com.adacielochallenge.prospect.dto.ClientType;
 import com.adacielochallenge.prospect.model.Client;
-import com.adacielochallenge.prospect.model.LegalEntity;
-import com.adacielochallenge.prospect.model.NaturalPerson;
 import com.adacielochallenge.prospect.repository.ClientRepository;
 import com.adacielochallenge.prospect.repository.LegalEntityRepository;
 import com.adacielochallenge.prospect.repository.NaturalPersonRepository;
@@ -33,24 +32,20 @@ public class ClientService {
 
     }
 
-    private Boolean isClientCreated(ClientSubService subService, ClientCreateDTO clientCreateDTO) {
-        return subService.isClientCreated(clientCreateDTO);
+    private Boolean clientExists(ClientSubService subService, ClientCreateDTO clientCreateDTO) {
+        return subService.clientExists(clientCreateDTO);
     }
 
     public void createClient(ClientCreateDTO clientCreateDTO) {
-        try {
-            ClientSubService subService = this.getSubService(clientCreateDTO);
 
-            this.isClientCreated(subService, clientCreateDTO);
-
-            Client client = subService.createClient(clientCreateDTO);
-
-            clientRepository.save(client);
-        } catch (Exception e) {
-            LOG.error(e.getMessage());
+        ClientSubService subService = this.getSubService(clientCreateDTO);
+        if (this.clientExists(subService, clientCreateDTO)) {
+            throw new DataIntegrityViolationException("client pre registration was already created.");
         }
+        Client client = subService.createClient(clientCreateDTO);
 
-        LOG.info(clientCreateDTO.toString());
+        clientRepository.save(client);
+
     }
 
     private ClientSubService getSubService(ClientCreateDTO clientCreateDTO) {

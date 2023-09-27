@@ -36,14 +36,8 @@ public class LegalEntityClientSubService implements ClientSubService {
     }
 
     @Override
-    public Boolean isClientCreated(ClientCreateDTO clientCreateDTO) {
-        List<LegalEntity> legalEntities = legalEntityRepository.findByCnpj(clientCreateDTO.getCnpj());
-
-        if (legalEntities.size() > 0) {
-            return true;
-        }
-
-        return false;
+    public Boolean clientExists(ClientCreateDTO clientCreateDTO) {
+        return legalEntityRepository.existsByCnpj(clientCreateDTO.getCnpj());
     }
 
 }
