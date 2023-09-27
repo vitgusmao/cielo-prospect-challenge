@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,7 +19,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.adacielochallenge.prospect.dto.ClientCreateDTO;
+import com.adacielochallenge.prospect.dto.LegalEntityCreateDTO;
+import com.adacielochallenge.prospect.dto.NaturalPersonCreateDTO;
 import com.adacielochallenge.prospect.model.Client;
 import com.adacielochallenge.prospect.service.ClientService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -30,7 +32,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/prospects")
+@RequestMapping
 public class ClientController {
     private static final Logger LOG = LoggerFactory.getLogger(ClientController.class);
 
@@ -41,22 +43,42 @@ public class ClientController {
         this.clientService = clientService;
     }
 
-    @Operation(summary = "Create a new prospect")
+    @Operation(summary = "Create a new legal entity prospect")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully created a new prospect")
+            @ApiResponse(responseCode = "200", description = "Successfully created a new legal entity prospect")
     })
-    @PostMapping
+    @PostMapping("/legal-entities")
     @Validated
-    public ResponseEntity<String> create(@Valid @RequestBody ClientCreateDTO clientCreateDTO) {
-        LOG.debug("create request arrived: %s".formatted(clientCreateDTO.toString()));
+    public ResponseEntity<String> createLegalEntity(@Valid @RequestBody LegalEntityCreateDTO legalEntityCreateDTO) {
+        LOG.debug("create request arrived: %s".formatted(legalEntityCreateDTO.toString()));
         try {
-            clientService.createClient(clientCreateDTO);
-            return ResponseEntity.ok("successfully created a new client pre registration.");
+            clientService.createLegalEntity(legalEntityCreateDTO);
+            return ResponseEntity.ok("successfully created a new client prospect.");
         } catch (DataIntegrityViolationException e) {
-            return ResponseEntity.badRequest().body("client pre registration already exists.");
+            return ResponseEntity.badRequest().body("client prospect already exists.");
         } catch (Exception e) {
             LOG.error(e.getMessage());
             return ResponseEntity.internalServerError().body("error creating a new client pre registration.");
+        }
+    }
+
+    @Operation(summary = "Create a new natural person prospect")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully created a new prospect")
+    })
+    @PostMapping("/natural-persons")
+    @Validated
+    public ResponseEntity<String> createNaturalPerson(
+            @Valid @RequestBody NaturalPersonCreateDTO naturalPersonCreateDTO) {
+        LOG.debug("create request arrived: %s".formatted(naturalPersonCreateDTO.toString()));
+        try {
+            clientService.createNaturalPerson(naturalPersonCreateDTO);
+            return ResponseEntity.ok("successfully created a new client prospect.");
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.badRequest().body("client prospect already exists.");
+        } catch (Exception e) {
+            LOG.error(e.getMessage());
+            return ResponseEntity.internalServerError().body("error creating a new client prospect.");
         }
     }
 
@@ -64,7 +86,7 @@ public class ClientController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved all prospects")
     })
-    @GetMapping
+    @GetMapping("/prospects")
     public ResponseEntity<String> list() {
 
         try {
@@ -84,24 +106,36 @@ public class ClientController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved prospect by path variable {id}")
     })
-    @GetMapping("{id}")
+    @GetMapping("/prospects/{id}")
     public ResponseEntity<String> retrieve(@PathVariable Long id) {
-        Optional<Client> client = clientService.retrieveClient(id);
-        if (client.isPresent()) {
-            try {
-                ObjectMapper objectMapper = new ObjectMapper();
-                return ResponseEntity.ok().body(objectMapper.writeValueAsString(client.get()));
-            } catch (JsonProcessingException e) {
-                LOG.error(e.getMessage());
-                return ResponseEntity.internalServerError().body("Erro processar retorno do cliente");
-            }
+        try {
+            Client client = clientService.retrieveClient(id);
+            ObjectMapper objectMapper = new ObjectMapper();
+            return ResponseEntity.ok().body(objectMapper.writeValueAsString(client));
+        } catch (JsonProcessingException e) {
+            LOG.error(e.getMessage());
+            return ResponseEntity.internalServerError().body("Erro processar retorno do cliente");
+        } catch (EmptyResultDataAccessException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            LOG.error(e.getMessage());
+            return ResponseEntity.internalServerError().body("Ocorreu um erro inesperado.");
         }
-        return ResponseEntity.notFound().build();
     }
 
-    // @PutMapping("{id}")
-    // public void update() {
-    // }
+    @PutMapping("/prospects/{id}")
+    public ResponseEntity<String> update(@PathVariable Long id) {
+        try {
+            Client client = clientService.retrieveClient(id);
+
+            return ResponseEntity.ok().body("objectMapper.writeValueAsString(client)");
+        } catch (EmptyResultDataAccessException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            LOG.error(e.getMessage());
+            return ResponseEntity.internalServerError().body("Ocorreu um erro inesperado.");
+        }
+    }
 
     // @DeleteMapping("{id}")
     // public void delete() {

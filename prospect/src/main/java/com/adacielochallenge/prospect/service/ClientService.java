@@ -6,42 +6,64 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import com.adacielochallenge.prospect.dto.ClientCreateDTO;
-import com.adacielochallenge.prospect.dto.ClientType;
+import com.adacielochallenge.prospect.dto.LegalEntityCreateDTO;
+import com.adacielochallenge.prospect.dto.NaturalPersonCreateDTO;
 import com.adacielochallenge.prospect.model.Client;
+import com.adacielochallenge.prospect.model.LegalEntity;
+import com.adacielochallenge.prospect.model.NaturalPerson;
 import com.adacielochallenge.prospect.repository.ClientRepository;
-import com.adacielochallenge.prospect.repository.LegalEntityRepository;
-import com.adacielochallenge.prospect.repository.NaturalPersonRepository;
 
 @Service
 public class ClientService {
     private static final Logger LOG = LoggerFactory.getLogger(ClientService.class);
 
+    private final NaturalPersonService naturalPersonService;
+    private final LegalEntityService legalEntityService;
+
     private final ClientRepository clientRepository;
-    private final NaturalPersonRepository naturalPersonRepository;
-    private final LegalEntityRepository legalEntityRepository;
 
     @Autowired
     public ClientService(
             ClientRepository clientRepository,
-            NaturalPersonRepository naturalPersonRepository,
-            LegalEntityRepository legalEntityRepository) {
+            LegalEntityService legalEntityService,
+            NaturalPersonService naturalPersonService) {
         this.clientRepository = clientRepository;
-        this.naturalPersonRepository = naturalPersonRepository;
-        this.legalEntityRepository = legalEntityRepository;
+
+        this.legalEntityService = legalEntityService;
+        this.naturalPersonService = naturalPersonService;
 
     }
 
-    public void createClient(ClientCreateDTO clientCreateDTO) {
+    public LegalEntity createLegalEntity(LegalEntityCreateDTO legalEntityCreateDTO) {
         try {
-            ClientSubService subService = this.getSubService(clientCreateDTO);
-            if (this.clientExists(subService, clientCreateDTO)) {
-                throw new DataIntegrityViolationException("client pre registration was already created.");
+
+            if (legalEntityService.legalEntityExists(legalEntityCreateDTO)) {
+                throw new DataIntegrityViolationException(
+                        "legal entity client prospect has already been created.");
             }
-            subService.createClient(clientCreateDTO);
+            LegalEntity legalEntity = legalEntityService.createLegalEntity(legalEntityCreateDTO);
+            return legalEntity;
+
+        } catch (Exception e) {
+            LOG.error(e.getMessage());
+            throw e;
+        }
+
+    }
+
+    public NaturalPerson createNaturalPerson(NaturalPersonCreateDTO naturalPersonCreateDTO) {
+        try {
+
+            if (naturalPersonService.naturalPersonExists(naturalPersonCreateDTO)) {
+                throw new DataIntegrityViolationException(
+                        "natural person client prospect has already been created.");
+            }
+            NaturalPerson naturalPerson = naturalPersonService.createNaturalPerson(naturalPersonCreateDTO);
+            return naturalPerson;
 
         } catch (Exception e) {
             LOG.error(e.getMessage());
@@ -52,31 +74,17 @@ public class ClientService {
 
     public List<Client> listClients() {
         List<Client> clientList = clientRepository.findAll();
-
         return clientList;
     }
 
-    public Optional<Client> retrieveClient(long id) {
+    public Client retrieveClient(long id) throws EmptyResultDataAccessException {
         Optional<Client> client = clientRepository.findById(id);
 
-        return client;
-    }
-
-    private Boolean clientExists(ClientSubService subService, ClientCreateDTO clientCreateDTO) {
-        return subService.clientExists(clientCreateDTO);
-    }
-
-    private ClientSubService getSubService(ClientCreateDTO clientCreateDTO) {
-        ClientType clientType = clientCreateDTO.getClientType();
-        switch (clientType) {
-            case LEGAL_ENTITY:
-                return new LegalEntityClientSubService(legalEntityRepository);
-
-            case NATURAL_PERSON:
-                return new NaturalPersonClientSubService(naturalPersonRepository);
-
-            default:
-                throw new IllegalArgumentException("Unsupported client type");
+        if (client.isEmpty()) {
+            throw new EmptyResultDataAccessException(1);
         }
+
+        return client.get();
     }
+
 }
