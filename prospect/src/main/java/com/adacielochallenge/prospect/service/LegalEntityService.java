@@ -4,7 +4,6 @@ import org.springframework.stereotype.Service;
 
 import com.adacielochallenge.prospect.dto.LegalEntityCreateDTO;
 import com.adacielochallenge.prospect.model.LegalEntity;
-import com.adacielochallenge.prospect.model.NaturalPerson;
 import com.adacielochallenge.prospect.repository.LegalEntityRepository;
 
 @Service

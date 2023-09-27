@@ -1,6 +1,5 @@
 package com.adacielochallenge.prospect.dto;
 
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -13,7 +12,7 @@ import lombok.ToString;
 @ToString
 public abstract class ClientCreateDTO {
 
-    @Pattern(regexp = "^[0-9]{4}$", message = "'Merchant Category Code' must not exceed 4 digits")
+    @Pattern(regexp = "^[0-9]{1,4}$", message = "'Merchant Category Code' must not exceed 4 digits")
     @NotNull
     private String mcc;
 
