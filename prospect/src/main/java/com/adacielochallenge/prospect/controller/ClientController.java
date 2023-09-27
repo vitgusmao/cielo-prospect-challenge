@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.adacielochallenge.prospect.dto.ClientCreateDTO;
 import com.adacielochallenge.prospect.model.Client;
 import com.adacielochallenge.prospect.service.ClientService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -54,6 +56,26 @@ public class ClientController {
             LOG.error(e.getMessage());
             return ResponseEntity.internalServerError().body("error creating a new client pre registration.");
         }
+    }
+
+    @Operation(summary = "Get the list off prospects")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved all prospects")
+    })
+    @GetMapping
+    public ResponseEntity<String> list() {
+
+        try {
+            List<Client> clientList = clientService.listClients();
+            ObjectMapper objectMapper = new ObjectMapper();
+            String jsonString = objectMapper.writeValueAsString(clientList);
+
+            return ResponseEntity.ok(jsonString);
+        } catch (JsonProcessingException e) {
+            LOG.error(e.getMessage());
+            return ResponseEntity.internalServerError().body("Erro ao ler lista de clientes");
+        }
+
     }
 
     // @GetMapping("{id}")

@@ -35,16 +35,24 @@ public class ClientService {
     }
 
     public void createClient(ClientCreateDTO clientCreateDTO) {
+        try {
+            ClientSubService subService = this.getSubService(clientCreateDTO);
+            if (this.clientExists(subService, clientCreateDTO)) {
+                throw new DataIntegrityViolationException("client pre registration was already created.");
+            }
+            subService.createClient(clientCreateDTO);
 
-        ClientSubService subService = this.getSubService(clientCreateDTO);
-        if (this.clientExists(subService, clientCreateDTO)) {
-            throw new DataIntegrityViolationException("client pre registration was already created.");
+        } catch (Exception e) {
+            LOG.error(e.getMessage());
+            throw e;
         }
-        subService.createClient(clientCreateDTO);
+
     }
 
     public List<Client> listClients() {
-        return clientRepository.findAll();
+        List<Client> clientList = clientRepository.findAll();
+
+        return clientList;
     }
 
     private Boolean clientExists(ClientSubService subService, ClientCreateDTO clientCreateDTO) {
@@ -55,10 +63,10 @@ public class ClientService {
         ClientType clientType = clientCreateDTO.getClientType();
         switch (clientType) {
             case LEGAL_ENTITY:
-                return new LegalEntityClientSubService(legalEntityRepository, clientRepository);
+                return new LegalEntityClientSubService(legalEntityRepository);
 
             case NATURAL_PERSON:
-                return new NaturalPersonClientSubService(naturalPersonRepository, clientRepository);
+                return new NaturalPersonClientSubService(naturalPersonRepository);
 
             default:
                 throw new IllegalArgumentException("Unsupported client type");
