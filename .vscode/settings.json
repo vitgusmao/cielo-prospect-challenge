@@ -4,7 +4,11 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[java]": { "editor.defaultFormatter": "redhat.java" },
-  "cSpell.words": ["Configurer"],
+  "cSpell.words": [
+    "cnpj",
+    "Configurer",
+    "prospec"
+  ],
   "cSpell.language": "en,pt,pt_BR",
   "java.autobuild.enabled": true,
   "java.compile.nullAnalysis.mode": "automatic",
