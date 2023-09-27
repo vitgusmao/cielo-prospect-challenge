@@ -1,39 +1,45 @@
 package com.adacielochallenge.prospect.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
-public class LegalEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+@DiscriminatorValue("LEGAL_ENTITY")
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "ID", "CNPJ" }))
+@ToString
+@Getter
+public class LegalEntity extends Client {
 
-    @Size(max = 14, min = 14, message = "CNPJ must have 14 digits")
-    private String cnpj; // número de 14 dígitos formatado com zeros à esquerda
+    @Setter
+    @Column(length = 14)
+    private String cnpj;
 
-    @Size(max = 50, message = "Corporate Reason must not exceed 50 characters")
-    private String corporateReason; // máximo de 50 caracteres
+    @Setter
+    @Column(length = 50)
+    private String corporateReason;
 
-    @Max(value = 9999, message = "'Merchant Category Code' must not exceed 4 digits")
-    private int mcc; // “Merchant Category Code“: número com no máximo 4 caracteres
+    @Setter
+    @Column(length = 4)
+    private String mcc;
 
     // Verificar se a pessoa física de contato da uma
     // empresa poderia ser ou não uma chave externa para a tabela de pessoas físicas
 
-    @Size(max = 11, min = 11, message = "Contact's CPF must have 11 digits")
-    private String contactCPF; // número de 11 dígitos formatado com zeros à esquerda
+    @Setter
+    @Column(length = 11)
+    private String contactCpf;
 
-    @Size(max = 50, message = "Contact's name must not exceed 50 characters")
-    private String contactName; // máximo de 50 caracteres
+    @Setter
+    @Column(length = 50)
+    private String contactName;
 
-    @Pattern(regexp = "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-.]+)\\.([a-zA-Z]{2,5})$", message = "Contact's e-mail must be a valid e-mail")
-    private String contactEmail; // expressão regular para
-                                 // validação: "^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-.]+)\.([a-zA-Z]{2,5})$"
+    @Setter
+    private String contactEmail;
 
 }
