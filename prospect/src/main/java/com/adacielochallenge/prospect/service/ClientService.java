@@ -128,4 +128,7 @@ public class ClientService {
         return client;
     }
 
+    public void deleteClient(long id) {
+        clientRepository.deleteById(id);
+    }
 }

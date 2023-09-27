@@ -43,9 +43,9 @@ public class ClientController {
         this.clientService = clientService;
     }
 
-    @Operation(summary = "Create a new legal entity prospect")
+    @Operation(summary = "create a new legal entity prospect")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully created a new legal entity prospect")
+            @ApiResponse(responseCode = "200", description = "successfully created a new legal entity prospect")
     })
     @PostMapping("/legal-entities")
     @Validated
@@ -62,9 +62,9 @@ public class ClientController {
         }
     }
 
-    @Operation(summary = "Create a new natural person prospect")
+    @Operation(summary = "create a new natural person prospect")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully created a new prospect")
+            @ApiResponse(responseCode = "200", description = "successfully created a new prospect")
     })
     @PostMapping("/natural-persons")
     @Validated
@@ -84,7 +84,7 @@ public class ClientController {
 
     @Operation(summary = "Get the list off prospects")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved all prospects")
+            @ApiResponse(responseCode = "200", description = "successfully retrieved all prospects")
     })
     @GetMapping("/prospects")
     public ResponseEntity<String> list() {
@@ -102,9 +102,9 @@ public class ClientController {
 
     }
 
-    @Operation(summary = "Retrieve one detailed prospect")
+    @Operation(summary = "retrieve one detailed prospect")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved prospect by path variable {id}")
+            @ApiResponse(responseCode = "200", description = "successfully retrieved prospect by path variable {id}")
     })
     @GetMapping("/prospects/{id}")
     public ResponseEntity<String> retrieve(@PathVariable Long id) {
@@ -114,7 +114,7 @@ public class ClientController {
             return ResponseEntity.ok().body(objectMapper.writeValueAsString(client));
         } catch (JsonProcessingException e) {
             LOG.error(e.getMessage());
-            return ResponseEntity.internalServerError().body("Erro processar retorno do cliente");
+            return ResponseEntity.internalServerError().body("erro processar retorno do cliente");
         } catch (EmptyResultDataAccessException e) {
             return ResponseEntity.notFound().build();
         } catch (Exception e) {
@@ -125,7 +125,7 @@ public class ClientController {
 
     @Operation(summary = "Update one prospect")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully updated prospect.")
+            @ApiResponse(responseCode = "200", description = "successfully updated prospect.")
     })
     @PutMapping("/prospects/{id}")
     @Validated
@@ -140,12 +140,24 @@ public class ClientController {
             return ResponseEntity.notFound().build();
         } catch (Exception e) {
             LOG.error(e.getMessage());
-            return ResponseEntity.internalServerError().body("Ocorreu um erro inesperado.");
+            return ResponseEntity.internalServerError().body("ocorreu um erro inesperado.");
         }
     }
 
-    // @DeleteMapping("{id}")
-    // public void delete() {
-    // }
+    @Operation(summary = "Delete one prospect")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "successfully deleted prospect.")
+    })
+    @DeleteMapping("/prospects/{id}")
+    public ResponseEntity<String> delete(@PathVariable Long id) {
+        try {
+            clientService.deleteClient(id);
+            return ResponseEntity.ok("successfully deleted prospect.");
+
+        } catch (Exception e) {
+            LOG.error(e.getMessage());
+            return ResponseEntity.internalServerError().body("ocorreu um erro inesperado.");
+        }
+    }
 
 }
