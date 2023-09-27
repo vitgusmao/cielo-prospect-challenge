@@ -1,5 +1,7 @@
 package com.adacielochallenge.prospect.service;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,30 +34,31 @@ public class ClientService {
 
     }
 
-    private Boolean clientExists(ClientSubService subService, ClientCreateDTO clientCreateDTO) {
-        return subService.clientExists(clientCreateDTO);
-    }
-
     public void createClient(ClientCreateDTO clientCreateDTO) {
 
         ClientSubService subService = this.getSubService(clientCreateDTO);
         if (this.clientExists(subService, clientCreateDTO)) {
             throw new DataIntegrityViolationException("client pre registration was already created.");
         }
-        Client client = subService.createClient(clientCreateDTO);
+        subService.createClient(clientCreateDTO);
+    }
 
-        clientRepository.save(client);
+    public List<Client> listClients() {
+        return clientRepository.findAll();
+    }
 
+    private Boolean clientExists(ClientSubService subService, ClientCreateDTO clientCreateDTO) {
+        return subService.clientExists(clientCreateDTO);
     }
 
     private ClientSubService getSubService(ClientCreateDTO clientCreateDTO) {
         ClientType clientType = clientCreateDTO.getClientType();
         switch (clientType) {
             case LEGAL_ENTITY:
-                return new LegalEntityClientSubService(legalEntityRepository);
+                return new LegalEntityClientSubService(legalEntityRepository, clientRepository);
 
             case NATURAL_PERSON:
-                return new NaturalPersonClientSubService(naturalPersonRepository);
+                return new NaturalPersonClientSubService(naturalPersonRepository, clientRepository);
 
             default:
                 throw new IllegalArgumentException("Unsupported client type");

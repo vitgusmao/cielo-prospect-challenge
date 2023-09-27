@@ -1,5 +1,7 @@
 package com.adacielochallenge.prospect.controller;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.adacielochallenge.prospect.dto.ClientCreateDTO;
+import com.adacielochallenge.prospect.model.Client;
 import com.adacielochallenge.prospect.service.ClientService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,17 +37,6 @@ public class ClientController {
         this.clientService = clientService;
     }
 
-    // @Operation(summary = "Get the list off prospects")
-    // @ApiResponses(value = {
-    // @ApiResponse(responseCode = "200", description = "Successfully retrieved all
-    // prospects")
-    // })
-    // @GetMapping
-    // public void list() {
-
-    // // return ResponseEntity.ok(prospecList);
-    // }
-
     @Operation(summary = "Create a new prospect")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully created a new prospect")
@@ -59,6 +51,7 @@ public class ClientController {
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.badRequest().body("client pre registration already exists.");
         } catch (Exception e) {
+            LOG.error(e.getMessage());
             return ResponseEntity.internalServerError().body("error creating a new client pre registration.");
         }
     }

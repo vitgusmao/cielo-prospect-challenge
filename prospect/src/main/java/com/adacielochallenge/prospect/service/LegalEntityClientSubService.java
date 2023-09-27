@@ -5,18 +5,21 @@ import java.util.List;
 import com.adacielochallenge.prospect.dto.ClientCreateDTO;
 import com.adacielochallenge.prospect.model.Client;
 import com.adacielochallenge.prospect.model.LegalEntity;
+import com.adacielochallenge.prospect.repository.ClientRepository;
 import com.adacielochallenge.prospect.repository.LegalEntityRepository;
 
 public class LegalEntityClientSubService implements ClientSubService {
 
     private final LegalEntityRepository legalEntityRepository;
+    private final ClientRepository clientRepository;
 
-    public LegalEntityClientSubService(LegalEntityRepository legalEntityRepository) {
+    public LegalEntityClientSubService(LegalEntityRepository legalEntityRepository, ClientRepository clientRepository) {
         this.legalEntityRepository = legalEntityRepository;
+        this.clientRepository = clientRepository;
     }
 
     @Override
-    public Client createClient(ClientCreateDTO clientCreateDTO) {
+    public void createClient(ClientCreateDTO clientCreateDTO) {
         Client client = new Client();
 
         LegalEntity legalEntity = new LegalEntity();
@@ -30,9 +33,12 @@ public class LegalEntityClientSubService implements ClientSubService {
 
         client.setLegalEntity(legalEntity);
 
+        clientRepository.save(client);
+
+        legalEntity.setClient(client);
+
         legalEntityRepository.save(legalEntity);
 
-        return client;
     }
 
     @Override

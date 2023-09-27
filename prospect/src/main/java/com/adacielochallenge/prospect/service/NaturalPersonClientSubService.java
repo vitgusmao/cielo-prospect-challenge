@@ -5,18 +5,22 @@ import java.util.List;
 import com.adacielochallenge.prospect.dto.ClientCreateDTO;
 import com.adacielochallenge.prospect.model.Client;
 import com.adacielochallenge.prospect.model.NaturalPerson;
+import com.adacielochallenge.prospect.repository.ClientRepository;
 import com.adacielochallenge.prospect.repository.NaturalPersonRepository;
 
 public class NaturalPersonClientSubService implements ClientSubService {
 
     private final NaturalPersonRepository naturalPersonRepository;
+    private final ClientRepository clientRepository;
 
-    public NaturalPersonClientSubService(NaturalPersonRepository naturalPersonRepository) {
+    public NaturalPersonClientSubService(NaturalPersonRepository naturalPersonRepository,
+            ClientRepository clientRepository) {
         this.naturalPersonRepository = naturalPersonRepository;
+        this.clientRepository = clientRepository;
     }
 
     @Override
-    public Client createClient(ClientCreateDTO clientCreateDTO) {
+    public void createClient(ClientCreateDTO clientCreateDTO) {
         Client client = new Client();
         NaturalPerson naturalPerson = new NaturalPerson();
 
@@ -27,9 +31,12 @@ public class NaturalPersonClientSubService implements ClientSubService {
 
         client.setNaturalPerson(naturalPerson);
 
+        clientRepository.save(client);
+
+        naturalPerson.setClient(client);
+
         naturalPersonRepository.save(naturalPerson);
 
-        return client;
     }
 
     @Override

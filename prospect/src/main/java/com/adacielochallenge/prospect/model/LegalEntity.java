@@ -26,6 +26,7 @@ public class LegalEntity {
 
     @OneToOne
     @JoinColumn(name = "client_id")
+    @Setter
     private Client client;
 
     @Setter

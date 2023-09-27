@@ -26,6 +26,7 @@ public class NaturalPerson {
 
     @OneToOne
     @JoinColumn(name = "client_id")
+    @Setter
     private Client client;
 
     @Setter
