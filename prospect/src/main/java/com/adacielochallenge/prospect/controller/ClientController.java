@@ -3,6 +3,7 @@ package com.adacielochallenge.prospect.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -54,9 +55,11 @@ public class ClientController {
         LOG.debug("create request arrived: %s".formatted(clientCreateDTO.toString()));
         try {
             clientService.createClient(clientCreateDTO);
-            return ResponseEntity.ok("Successfully created a new client pre registration");
+            return ResponseEntity.ok("successfully created a new client pre registration.");
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.badRequest().body("client pre registration already exists.");
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body("Error creating a new client pre registration");
+            return ResponseEntity.internalServerError().body("error creating a new client pre registration.");
         }
     }
 
