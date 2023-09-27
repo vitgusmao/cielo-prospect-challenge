@@ -3,12 +3,11 @@
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "[java]": { "editor.defaultFormatter": "redhat.java" },
-  "cSpell.words": [
-    "cnpj",
-    "Configurer",
-    "prospec"
-  ],
+  "[java]": {
+    "editor.defaultFormatter": "redhat.java",
+    "editor.codeActionsOnSave": { "source.fixAll": true }
+  },
+  "cSpell.words": ["adacielochallenge", "cnpj", "Configurer", "prospec"],
   "cSpell.language": "en,pt,pt_BR",
   "java.autobuild.enabled": true,
   "java.compile.nullAnalysis.mode": "automatic",
