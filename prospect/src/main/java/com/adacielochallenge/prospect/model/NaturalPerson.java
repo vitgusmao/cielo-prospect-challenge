@@ -1,27 +1,39 @@
 package com.adacielochallenge.prospect.model;
 
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
+@Entity
+@DiscriminatorValue("NATURAL_PERSON")
+@ToString
+@Getter
 public class NaturalPerson {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    @Size(max = 11, min = 11, message = "CPF must have 11 digits")
-    private String contactCPF; // número de 11 dígitos formatado com zeros à esquerda
+    @OneToOne
+    @JoinColumn(name = "client_id")
+    private Client client;
 
-    @Max(value = 9999, message = "'Merchant Category Code' must not exceed 4 digits")
-    private int mcc; // “Merchant Category Code“: número com no máximo 4 caracteres
+    @Setter
+    private String cpf;
 
-    @Size(max = 50, message = "name must not exceed 50 characters")
-    private String name; // máximo de 50 caracteres
+    @Setter
+    private int mcc;
 
-    @Pattern(regexp = "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-.]+)\\.([a-zA-Z]{2,5})$", message = "email must be a valid e-mail")
-    private String email; // expressão regular para
-                          // validação: "^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-.]+)\.([a-zA-Z]{2,5})$"
+    @Setter
+    private String name;
+
+    @Setter
+    private String email;
 }
