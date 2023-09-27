@@ -33,45 +33,37 @@ public class ClientService {
 
     }
 
-    public void createClient(ClientCreateDTO clientCreateDTO) {
-        ClientType clientType = clientCreateDTO.getClientType();
-        Client client = new Client();
+    private Boolean isClientCreated(ClientSubService subService, ClientCreateDTO clientCreateDTO) {
+        return subService.isClientCreated(clientCreateDTO);
+    }
 
+    public void createClient(ClientCreateDTO clientCreateDTO) {
+        try {
+            ClientSubService subService = this.getSubService(clientCreateDTO);
+
+            this.isClientCreated(subService, clientCreateDTO);
+
+            Client client = subService.createClient(clientCreateDTO);
+
+            clientRepository.save(client);
+        } catch (Exception e) {
+            LOG.error(e.getMessage());
+        }
+
+        LOG.info(clientCreateDTO.toString());
+    }
+
+    private ClientSubService getSubService(ClientCreateDTO clientCreateDTO) {
+        ClientType clientType = clientCreateDTO.getClientType();
         switch (clientType) {
             case LEGAL_ENTITY:
-                LegalEntity legalEntity = new LegalEntity();
-
-                legalEntity.setCnpj(clientCreateDTO.getCnpj());
-                legalEntity.setCorporateReason(clientCreateDTO.getCorporateReason());
-                legalEntity.setMcc(clientCreateDTO.getMcc());
-                legalEntity.setContactCPF(clientCreateDTO.getCpf());
-                legalEntity.setContactName(clientCreateDTO.getName());
-                legalEntity.setContactEmail(clientCreateDTO.getEmail());
-
-                legalEntityRepository.save(legalEntity);
-
-                client.setLegalEntity(legalEntity);
-                break;
+                return new LegalEntityClientSubService(legalEntityRepository);
 
             case NATURAL_PERSON:
-                NaturalPerson naturalPerson = new NaturalPerson();
-
-                naturalPerson.setCpf(clientCreateDTO.getCpf());
-                naturalPerson.setName(clientCreateDTO.getName());
-                naturalPerson.setMcc(clientCreateDTO.getMcc());
-                naturalPerson.setEmail(clientCreateDTO.getEmail());
-
-                naturalPersonRepository.save(naturalPerson);
-
-                client.setNaturalPerson(naturalPerson);
-                break;
+                return new NaturalPersonClientSubService(naturalPersonRepository);
 
             default:
                 throw new IllegalArgumentException("Unsupported client type");
         }
-
-        clientRepository.save(client);
-
-        LOG.info(clientCreateDTO.toString());
     }
 }
