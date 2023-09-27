@@ -13,10 +13,6 @@ import lombok.ToString;
 @ToString
 public class LegalEntityCreateDTO extends ClientCreateDTO {
 
-    @Max(value = 9999, message = "'Merchant Category Code' must not exceed 4 digits")
-    @NotNull
-    private int mcc;
-
     @Pattern(regexp = "^[0-9]{14}$", message = "CNPJ must have 14 digits")
     @NotNull
     private String cnpj;

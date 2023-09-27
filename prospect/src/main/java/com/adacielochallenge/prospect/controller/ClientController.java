@@ -1,7 +1,6 @@
 package com.adacielochallenge.prospect.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.adacielochallenge.prospect.dto.ClientUpdateDTO;
 import com.adacielochallenge.prospect.dto.LegalEntityCreateDTO;
 import com.adacielochallenge.prospect.dto.NaturalPersonCreateDTO;
 import com.adacielochallenge.prospect.model.Client;
@@ -123,12 +123,19 @@ public class ClientController {
         }
     }
 
+    @Operation(summary = "Update one prospect")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully updated prospect.")
+    })
     @PutMapping("/prospects/{id}")
-    public ResponseEntity<String> update(@PathVariable Long id) {
+    @Validated
+    public ResponseEntity<String> update(@PathVariable Long id, @Valid @RequestBody ClientUpdateDTO clientUpdateDTO) {
         try {
-            Client client = clientService.retrieveClient(id);
-
-            return ResponseEntity.ok().body("objectMapper.writeValueAsString(client)");
+            Client client = clientService.updateClient(id, clientUpdateDTO);
+            if (client != null) {
+                return ResponseEntity.badRequest().body("corpo da requisição inválido");
+            }
+            return ResponseEntity.ok().body("prospect atualizado com sucesso");
         } catch (EmptyResultDataAccessException e) {
             return ResponseEntity.notFound().build();
         } catch (Exception e) {

@@ -1,5 +1,6 @@
 package com.adacielochallenge.prospect.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -16,12 +17,15 @@ import lombok.ToString;
 public class NaturalPerson extends Client {
 
     @Setter
+    @Column(length = 11)
     private String cpf;
 
     @Setter
-    private int mcc;
+    @Column(length = 4)
+    private String mcc;
 
     @Setter
+    @Column(length = 50)
     private String name;
 
     @Setter

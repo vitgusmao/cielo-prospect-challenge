@@ -10,6 +10,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import com.adacielochallenge.prospect.dto.ClientUpdateDTO;
 import com.adacielochallenge.prospect.dto.LegalEntityCreateDTO;
 import com.adacielochallenge.prospect.dto.NaturalPersonCreateDTO;
 import com.adacielochallenge.prospect.model.Client;
@@ -85,6 +86,46 @@ public class ClientService {
         }
 
         return client.get();
+    }
+
+    public Client updateClient(long id, ClientUpdateDTO clientUpdateDTO) throws EmptyResultDataAccessException {
+        Client client = this.retrieveClient(id);
+
+        if (clientUpdateDTO.validate(client)) {
+
+            String corporateReason = clientUpdateDTO.getCorporateReason();
+            String mcc = clientUpdateDTO.getMcc();
+            String cpf = clientUpdateDTO.getCpf();
+            String name = clientUpdateDTO.getName();
+            String email = clientUpdateDTO.getEmail();
+
+            if (client instanceof LegalEntity) {
+                if (corporateReason != null) {
+                    ((LegalEntity) client).setCorporateReason(corporateReason);
+                } else if (mcc != null) {
+                    ((LegalEntity) client).setMcc(mcc);
+                } else if (cpf != null) {
+                    ((LegalEntity) client).setContactCpf(cpf);
+                } else if (name != null) {
+                    ((LegalEntity) client).setContactName(name);
+                } else if (email != null) {
+                    ((LegalEntity) client).setContactEmail(email);
+                }
+            } else if (client instanceof NaturalPerson) {
+                if (cpf != null) {
+                    ((NaturalPerson) client).setCpf(cpf);
+                } else if (name != null) {
+                    ((NaturalPerson) client).setName(name);
+                } else if (email != null) {
+                    ((NaturalPerson) client).setEmail(email);
+                }
+            }
+
+            clientRepository.save(client);
+            return null;
+        }
+
+        return client;
     }
 
 }
