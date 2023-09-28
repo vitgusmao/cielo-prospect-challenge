@@ -1,4 +1,10 @@
 {
+  "autoSnippet.snippets": [
+    {
+      "language": "typescriptreact",
+      "snippet": "new-file-react-function-component"
+    }
+  ],
   "editor.formatOnSave": true,
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
@@ -18,5 +24,18 @@
   "java.editor.reloadChangedSources": "auto",
   "java.maven.updateSnapshots": true,
   "maven.pomfile.autoUpdateEffectivePOM": true,
-  "maven.view": "hierarchical"
+  "maven.view": "hierarchical",
+
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true
+    }
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true
+    }
+  }
 }

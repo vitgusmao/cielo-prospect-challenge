@@ -1,0 +1,16 @@
+{
+  "new-file-react-function-component": {
+    "scope": "typescriptreact",
+    "body": [
+      "import React from 'react';",
+      "",
+      "function $TM_FILENAME_BASE() {",
+      "  return <div></div>;",
+      "}",
+      "",
+      "export default $TM_FILENAME_BASE;"
+    ],
+    "description": "Create a basic functional React component for a new file",
+    "isFileTemplate": true
+  }
+}
