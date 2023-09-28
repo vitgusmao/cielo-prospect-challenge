@@ -12,7 +12,9 @@ import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 @Entity
@@ -32,5 +34,9 @@ public class Client {
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdOn = new Date();
+
+    @Setter
+    @NotNull
+    private ProspectStatus status = ProspectStatus.NOT_PROCESSED;
 
 }
