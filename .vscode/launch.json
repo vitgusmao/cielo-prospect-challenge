@@ -5,12 +5,12 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "type": "java",
       "name": "ProspectApplication",
       "request": "launch",
       "mainClass": "com.adacielochallenge.prospect.ProspectApplication",
       "projectName": "prospect",
-      "cwd": "${workspaceFolder}/prospect"
+      "cwd": "${workspaceFolder}/prospect",
+      "type": "java"
     }
   ]
 }

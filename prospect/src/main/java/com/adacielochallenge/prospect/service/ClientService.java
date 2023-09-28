@@ -1,5 +1,7 @@
 package com.adacielochallenge.prospect.service;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +18,7 @@ import com.adacielochallenge.prospect.dto.NaturalPersonCreateDTO;
 import com.adacielochallenge.prospect.model.Client;
 import com.adacielochallenge.prospect.model.LegalEntity;
 import com.adacielochallenge.prospect.model.NaturalPerson;
+import com.adacielochallenge.prospect.model.ProspectStatus;
 import com.adacielochallenge.prospect.repository.ClientRepository;
 
 @Service
@@ -130,5 +133,24 @@ public class ClientService {
 
     public void deleteClient(long id) {
         clientRepository.deleteById(id);
+    }
+
+    public Client shiftProspects() throws IllegalStateException {
+        List<Client> clientList = clientRepository.findByStatus(ProspectStatus.NOT_PROCESSED);
+
+        if (clientList.size() == 0) {
+            throw new IllegalStateException("empty queue");
+        }
+        Collections.sort(clientList, new Comparator<Client>() {
+            public int compare(Client o1, Client o2) {
+                return o2.getCreatedOn().compareTo(o1.getCreatedOn());
+            }
+        });
+
+        Client shiftedClient = clientList.get(0);
+        shiftedClient.setStatus(ProspectStatus.PROCESSING);
+        clientRepository.save(shiftedClient);
+
+        return shiftedClient;
     }
 }
