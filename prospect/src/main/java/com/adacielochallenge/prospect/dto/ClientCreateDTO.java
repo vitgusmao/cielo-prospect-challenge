@@ -12,19 +12,21 @@ import lombok.ToString;
 @ToString
 public abstract class ClientCreateDTO {
 
-    @Pattern(regexp = "^[0-9]{1,4}$", message = "'Merchant Category Code' must not exceed 4 digits")
-    @NotNull
+    @NotNull(message = "'Merchant Category Code' não pode ser vazio.")
+    @Size(max = 4, min = 1, message = "'Merchant Category Code' não deve exceder 4 caracteres.")
+    @Pattern(regexp = "^[0-9]*$", message = "'Merchant Category Code' só pode assumir valores numéricos.")
     private String mcc;
 
-    @Pattern(regexp = "^[0-9]{11}$", message = "cpf must have 11 digits")
-    @NotNull
+    @NotNull(message = "cpf não pode ser vazio.")
+    @Size(max = 11, min = 11, message = "cpf deve conter exatamente 11 dígitos.")
+    @Pattern(regexp = "^[0-9]*$", message = "cpf só pode assumir valores numéricos")
     private String cpf;
 
-    @Size(max = 50, message = "name must not exceed 50 characters")
-    @NotNull
+    @NotNull(message = "nome não pode ser vazio.")
+    @Size(max = 50, message = "nome não pode ter mais de 50 caracteres")
     private String name;
 
-    @Pattern(regexp = "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-.]+)\\.([a-zA-Z]{2,5})$", message = "email must be a valid e-mail")
-    @NotNull
+    @NotNull(message = "e-mail não pode ser vazio.")
+    @Pattern(regexp = "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-.]+)\\.([a-zA-Z]{2,5})$", message = "e-mail deve ser um e-mail válido")
     private String email;
 }

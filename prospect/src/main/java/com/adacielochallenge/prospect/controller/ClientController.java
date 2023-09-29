@@ -48,7 +48,9 @@ public class ClientController {
 
     @Operation(summary = "create a new legal entity prospect")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "successfully created a new legal entity prospect")
+            @ApiResponse(responseCode = "201", description = "successfully created a new legal entity prospect"),
+            @ApiResponse(responseCode = "400", description = "client already exists or data provided is not valid."),
+            @ApiResponse(responseCode = "500", description = "unexpected error creating a new client prospect.")
     })
     @PostMapping("/legal-entities")
     @Validated
@@ -76,7 +78,8 @@ public class ClientController {
     @Validated
     public ResponseEntity<String> createNaturalPerson(
             @Valid @RequestBody NaturalPersonCreateDTO naturalPersonCreateDTO) {
-        LOG.debug("create request arrived: %s".formatted(naturalPersonCreateDTO.toString()));
+
+        LOG.info("create request arrived: %s".formatted(naturalPersonCreateDTO.toString()));
         try {
             clientService.createNaturalPerson(naturalPersonCreateDTO);
             return new ResponseEntity<>(this.generateResponseMessageJson("successfully created a new client prospect."),
