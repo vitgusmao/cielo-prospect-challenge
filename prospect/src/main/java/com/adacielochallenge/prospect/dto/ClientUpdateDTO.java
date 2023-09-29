@@ -4,7 +4,6 @@ import com.adacielochallenge.prospect.model.Client;
 import com.adacielochallenge.prospect.model.LegalEntity;
 import com.adacielochallenge.prospect.model.NaturalPerson;
 
-import jakarta.annotation.Nullable;
 import jakarta.validation.ValidationException;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;

@@ -16,8 +16,9 @@ public class ProspectQueue {
     @Setter
     private List<Client> prospects;
 
-    public void unshift(Client client) {
-        this.prospects.add(client);
+    public void unshift(Client newProspect) {
+        this.remove(newProspect.getId());
+        this.prospects.add(newProspect);
     }
 
     public Client shift() throws IllegalStateException {
@@ -27,4 +28,20 @@ public class ProspectQueue {
         return this.prospects.remove(0);
     }
 
+    public void remove(Long idToRemove) {
+        boolean found = false;
+        int foundIndex = -1;
+        for (int i = 0; i < this.prospects.size(); i += 1) {
+            Client prospect = this.prospects.get(i);
+            if (prospect.getId() == idToRemove) {
+                found = true;
+                foundIndex = i;
+                break;
+            }
+        }
+
+        if (found) {
+            this.prospects.remove(foundIndex);
+        }
+    }
 }

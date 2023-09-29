@@ -150,15 +150,9 @@ public class ClientController {
     public ResponseEntity<Object> update(@PathVariable Long id, @Valid @RequestBody ClientUpdateDTO clientUpdateDTO) {
         try {
             Client client = clientService.updateClient(id, clientUpdateDTO);
-            if (client == null) {
-                return ResponseEntity
-                        .ok()
-                        .body(this.generateErrorMessage("prospect atualizado com sucesso"));
-            }
-            return ResponseEntity
-                    .badRequest()
-                    .body(this.generateErrorMessage("corpo da requisição inválido"));
-        } catch (EmptyResultDataAccessException e) {
+            return ResponseEntity.ok().body(client);
+
+        } catch (IllegalStateException e) {
             return ResponseEntity.notFound().build();
         } catch (Exception e) {
             LOG.error(e.getMessage());

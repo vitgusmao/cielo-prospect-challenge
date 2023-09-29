@@ -1,5 +1,7 @@
 package com.adacielochallenge.prospect.model;
 
+import com.adacielochallenge.prospect.dto.ClientUpdateDTO;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
@@ -41,5 +43,27 @@ public class LegalEntity extends Client {
 
     @Setter
     private String contactEmail;
+
+    @Override
+    public void update(ClientUpdateDTO updateDTO) {
+        String corporateReason = updateDTO.getCorporateReason();
+        String mcc = updateDTO.getMcc();
+        String cpf = updateDTO.getCpf();
+        String name = updateDTO.getName();
+        String email = updateDTO.getEmail();
+        if (corporateReason != null) {
+            this.setCorporateReason(corporateReason);
+        } else if (mcc != null) {
+            this.setMcc(mcc);
+        } else if (cpf != null) {
+            this.setContactCpf(cpf);
+        } else if (name != null) {
+            this.setContactName(name);
+        } else if (email != null) {
+            this.setContactEmail(email);
+        }
+
+        super.update(updateDTO);
+    }
 
 }

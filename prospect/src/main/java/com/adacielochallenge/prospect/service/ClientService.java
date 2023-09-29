@@ -17,6 +17,7 @@ import com.adacielochallenge.prospect.dto.NaturalPersonCreateDTO;
 import com.adacielochallenge.prospect.model.Client;
 import com.adacielochallenge.prospect.model.LegalEntity;
 import com.adacielochallenge.prospect.model.NaturalPerson;
+import com.adacielochallenge.prospect.model.ProspectStatus;
 import com.adacielochallenge.prospect.repository.ClientRepository;
 
 @Service
@@ -85,49 +86,23 @@ public class ClientService {
         return clientList;
     }
 
-    public Client retrieveClient(long id) throws EmptyResultDataAccessException {
+    public Client retrieveClient(long id) throws IllegalStateException {
         Optional<Client> client = clientRepository.findById(id);
 
         if (client.isEmpty()) {
-            throw new EmptyResultDataAccessException(1);
+            throw new IllegalStateException("nenhum cliente com o id fornecido foi encontrado.");
         }
 
         return client.get();
     }
 
-    public Client updateClient(long id, ClientUpdateDTO clientUpdateDTO) throws EmptyResultDataAccessException {
+    public Client updateClient(long id, ClientUpdateDTO clientUpdateDTO) throws IllegalStateException {
         Client client = this.retrieveClient(id);
 
         if (clientUpdateDTO.validate(client)) {
-
-            String corporateReason = clientUpdateDTO.getCorporateReason();
-            String mcc = clientUpdateDTO.getMcc();
-            String cpf = clientUpdateDTO.getCpf();
-            String name = clientUpdateDTO.getName();
-            String email = clientUpdateDTO.getEmail();
-
-            if (client instanceof LegalEntity) {
-                if (corporateReason != null) {
-                    ((LegalEntity) client).setCorporateReason(corporateReason);
-                } else if (mcc != null) {
-                    ((LegalEntity) client).setMcc(mcc);
-                } else if (cpf != null) {
-                    ((LegalEntity) client).setContactCpf(cpf);
-                } else if (name != null) {
-                    ((LegalEntity) client).setContactName(name);
-                } else if (email != null) {
-                    ((LegalEntity) client).setContactEmail(email);
-                }
-            } else if (client instanceof NaturalPerson) {
-                if (cpf != null) {
-                    ((NaturalPerson) client).setCpf(cpf);
-                } else if (name != null) {
-                    ((NaturalPerson) client).setName(name);
-                } else if (email != null) {
-                    ((NaturalPerson) client).setEmail(email);
-                }
-            }
-
+            client.update(clientUpdateDTO);
+            client.setStatus(ProspectStatus.NOT_PROCESSED);
+            prospectQueue.unshift(client);
             clientRepository.save(client);
             return null;
         }
@@ -136,6 +111,7 @@ public class ClientService {
     }
 
     public void deleteClient(long id) {
+        prospectQueue.remove(id);
         clientRepository.deleteById(id);
     }
 
