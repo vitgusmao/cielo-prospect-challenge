@@ -1,7 +1,5 @@
 package com.adacielochallenge.prospect.service;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,13 +10,13 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import com.adacielochallenge.prospect.component.ProspectQueue;
 import com.adacielochallenge.prospect.dto.ClientUpdateDTO;
 import com.adacielochallenge.prospect.dto.LegalEntityCreateDTO;
 import com.adacielochallenge.prospect.dto.NaturalPersonCreateDTO;
 import com.adacielochallenge.prospect.model.Client;
 import com.adacielochallenge.prospect.model.LegalEntity;
 import com.adacielochallenge.prospect.model.NaturalPerson;
-import com.adacielochallenge.prospect.model.ProspectStatus;
 import com.adacielochallenge.prospect.repository.ClientRepository;
 
 @Service
@@ -30,16 +28,20 @@ public class ClientService {
 
     private final ClientRepository clientRepository;
 
+    private final ProspectQueue prospectQueue;
+
     @Autowired
     public ClientService(
             ClientRepository clientRepository,
             LegalEntityService legalEntityService,
-            NaturalPersonService naturalPersonService) {
+            NaturalPersonService naturalPersonService,
+            ProspectQueue prospectQueue) {
         this.clientRepository = clientRepository;
 
         this.legalEntityService = legalEntityService;
         this.naturalPersonService = naturalPersonService;
 
+        this.prospectQueue = prospectQueue;
     }
 
     public LegalEntity createLegalEntity(LegalEntityCreateDTO legalEntityCreateDTO) {
@@ -47,9 +49,10 @@ public class ClientService {
 
             if (legalEntityService.legalEntityExists(legalEntityCreateDTO)) {
                 throw new DataIntegrityViolationException(
-                        "legal entity client prospect has already been created.");
+                        "prospect para essa pessoa jurídica já foi criado.");
             }
             LegalEntity legalEntity = legalEntityService.createLegalEntity(legalEntityCreateDTO);
+            prospectQueue.unshift(legalEntity);
             return legalEntity;
 
         } catch (Exception e) {
@@ -64,9 +67,10 @@ public class ClientService {
 
             if (naturalPersonService.naturalPersonExists(naturalPersonCreateDTO)) {
                 throw new DataIntegrityViolationException(
-                        "natural person client prospect has already been created.");
+                        "prospect para essa pessoa física já foi criado.");
             }
             NaturalPerson naturalPerson = naturalPersonService.createNaturalPerson(naturalPersonCreateDTO);
+            prospectQueue.unshift(naturalPerson);
             return naturalPerson;
 
         } catch (Exception e) {
@@ -135,22 +139,4 @@ public class ClientService {
         clientRepository.deleteById(id);
     }
 
-    public Client shiftProspects() throws IllegalStateException {
-        List<Client> clientList = clientRepository.findByStatus(ProspectStatus.NOT_PROCESSED);
-
-        if (clientList.size() == 0) {
-            throw new IllegalStateException("empty queue");
-        }
-        Collections.sort(clientList, new Comparator<Client>() {
-            public int compare(Client o1, Client o2) {
-                return o2.getCreatedOn().compareTo(o1.getCreatedOn());
-            }
-        });
-
-        Client shiftedClient = clientList.get(0);
-        shiftedClient.setStatus(ProspectStatus.PROCESSING);
-        clientRepository.save(shiftedClient);
-
-        return shiftedClient;
-    }
 }

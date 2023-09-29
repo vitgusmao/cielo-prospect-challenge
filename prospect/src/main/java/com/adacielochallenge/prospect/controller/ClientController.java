@@ -173,25 +173,6 @@ public class ClientController {
         }
     }
 
-    @Operation(summary = "retrieve one prospect from the queue")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "successfully shifted prospects.")
-    })
-    @GetMapping("/prospects")
-    @Validated
-    public ResponseEntity<String> shiftProspects() {
-        try {
-            Client client = clientService.shiftProspects();
-            return ResponseEntity.ok().body(objectMapper.writeValueAsString(client));
-        } catch (IllegalStateException e) {
-            return ResponseEntity.notFound().build();
-        } catch (Exception e) {
-            LOG.error(e.getMessage());
-            return ResponseEntity.internalServerError()
-                    .body(this.generateResponseMessageJson("ocorreu um erro inesperado."));
-        }
-    }
-
     private String generateResponseMessageJson(String message) {
         ObjectNode jsonNode = objectMapper.createObjectNode();
         jsonNode.put("message", message);

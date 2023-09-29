@@ -35,6 +35,9 @@ public class Client {
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdOn = new Date();
 
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date updatedOn = this.createdOn;
+
     @Setter
     @NotNull
     private ProspectStatus status = ProspectStatus.NOT_PROCESSED;
