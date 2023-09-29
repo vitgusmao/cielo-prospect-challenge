@@ -2,8 +2,6 @@
   "new-file-react-function-component": {
     "scope": "typescriptreact",
     "body": [
-      "import React from 'react';",
-      "",
       "function $TM_FILENAME_BASE() {",
       "  return <div></div>;",
       "}",

@@ -3,6 +3,7 @@ import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import Layout from 'antd/es/layout';
 import Menu from 'antd/es/menu';
 import Typography from 'antd/es/typography';
+import { Outlet } from 'react-router-dom';
 import styled from 'styled-components';
 
 import colors from '../../colors';
@@ -104,7 +105,9 @@ function LandingPage() {
           />
         </Layout.Sider>
         <Layout.Content className="page-content">
-          <Card className="content-holder" />
+          <Card className="content-holder">
+            <Outlet />
+          </Card>
         </Layout.Content>
       </Layout>
       <Layout.Footer className="page-footer">
