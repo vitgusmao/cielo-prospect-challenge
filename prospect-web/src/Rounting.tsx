@@ -2,6 +2,7 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
 import LandingPage from './pages/LandingPage';
 import ClientList from './pages/LandingPage/children/ClientList';
+import NewClient from './pages/LandingPage/children/NewClient';
 import QuickActions from './pages/LandingPage/children/QuickActions';
 
 function Routing() {
@@ -10,7 +11,11 @@ function Routing() {
       path: '/',
       element: <LandingPage />,
       children: [
-        { path: 'clients', element: <ClientList /> },
+        {
+          path: 'clients',
+          element: <ClientList />,
+        },
+        { path: 'new-client', element: <NewClient /> },
         { index: true, element: <QuickActions /> },
       ],
     },

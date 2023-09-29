@@ -1,10 +1,19 @@
 import { Divider } from 'antd';
 import Button from 'antd/es/button';
 import Space from 'antd/es/space';
-import Typography from 'antd/es/typography';
+import { FaBolt } from 'react-icons/fa';
 import styled from 'styled-components';
 
+import Title from '../../../components/Title';
+
 const StyledDiv = styled.div`
+  .title {
+    margin-top: 0;
+    @media screen and (max-width: 498px) {
+      font-size: 24px;
+    }
+  }
+
   .big-button {
     height: 180px;
     width: 200px;
@@ -14,11 +23,11 @@ const StyledDiv = styled.div`
 function QuickActions() {
   return (
     <StyledDiv>
-      <Typography.Title>Ações rápidas</Typography.Title>
+      <Title iconComponent={FaBolt} label="Ações rápidas" level={2} />
       <Divider />
-      <Space size="large">
-        <Button className="big-button">Novo pré registro</Button>
-        <Button className="big-button">Listar clientes</Button>
+      <Space size="large" wrap>
+        <Button className="big-button">Adicionar pré registro</Button>
+        <Button className="big-button">Analisar pré registro</Button>
       </Space>
     </StyledDiv>
   );
