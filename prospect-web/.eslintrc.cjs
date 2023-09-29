@@ -25,6 +25,7 @@ module.exports = {
       { allowConstantExport: true },
     ],
     'react/react-in-jsx-scope': 'off',
+    'react/require-default-props': ['warn', { functions: 'defaultArguments' }],
     'import/no-unresolved': 'error',
     'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
     '@typescript-eslint/no-use-before-define': 'off',

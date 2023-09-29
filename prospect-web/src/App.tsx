@@ -1,6 +1,7 @@
 import ConfigProvider from 'antd/es/config-provider';
 
 import colors from './colors';
+import MessageProvider from './contexts/Message';
 import Routing from './Rounting';
 
 function App() {
@@ -11,7 +12,9 @@ function App() {
         components: { Menu: { itemBg: 'transparent' } },
       }}
     >
-      <Routing />
+      <MessageProvider>
+        <Routing />
+      </MessageProvider>
     </ConfigProvider>
   );
 }

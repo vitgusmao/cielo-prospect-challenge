@@ -13,7 +13,13 @@
     "editor.defaultFormatter": "redhat.java",
     "editor.codeActionsOnSave": { "source.fixAll": true }
   },
-  "cSpell.words": ["adacielochallenge", "cnpj", "Configurer", "prospec"],
+  "cSpell.words": [
+    "adacielochallenge",
+    "cnpj",
+    "Configurer",
+    "dotenv",
+    "prospec"
+  ],
   "cSpell.language": "en,pt,pt_BR",
   "java.autobuild.enabled": true,
   "java.compile.nullAnalysis.mode": "automatic",
