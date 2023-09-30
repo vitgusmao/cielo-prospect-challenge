@@ -69,6 +69,10 @@ Este repositório contém dois projetos separados: um projeto Spring Boot em Jav
 
    O aplicativo web estará acessível na porta definida no arquivo `prospect-web/vite.config.ts`.
 
+### Atenção
+
+Se atentar às origens permitidas pela política do cors e a url sendo utilizada para acessar a web, o cors identifica de form diferente `localhost` e `127.0.0.1`
+
 ## Licença
 
 Este projeto não possui uma licença para uso livre.
