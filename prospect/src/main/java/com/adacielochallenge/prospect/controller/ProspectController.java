@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.adacielochallenge.prospect.dto.ProspectUpdateDTO;
 import com.adacielochallenge.prospect.model.Client;
 import com.adacielochallenge.prospect.service.ProspectService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -26,6 +26,8 @@ import jakarta.validation.Valid;
 public class ProspectController {
 
     private static final Logger LOG = LoggerFactory.getLogger(ProspectController.class);
+
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     // @MessageMapping("/prospects")
     // @SendTo("/topic/something")
@@ -53,7 +55,7 @@ public class ProspectController {
             return ResponseEntity.ok(prospect);
         } catch (IllegalStateException e) {
             LOG.warn(e.getMessage());
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(this.generateErrorMessage(e.getMessage()));
         }
     }
 
@@ -71,8 +73,14 @@ public class ProspectController {
             return ResponseEntity.ok(prospect);
         } catch (IllegalStateException e) {
             LOG.warn(e.getMessage());
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(this.generateErrorMessage(e.getMessage()));
         }
+    }
+
+    private Object generateErrorMessage(String message) {
+        ObjectNode jsonNode = objectMapper.createObjectNode();
+        jsonNode.put("message", message);
+        return jsonNode;
     }
 
 }

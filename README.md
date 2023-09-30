@@ -13,11 +13,7 @@ Este repositório contém dois projetos separados: um projeto Spring Boot em Jav
 
 ### Passos de Configuração
 
-1. Clone este repositório:
-
-   ```bash
-   git clone https://github.com/seu-usuario/repo.git
-   ```
+1. Clone este repositório
 
 2. Navegue até a pasta `prospect`:
 
@@ -25,13 +21,16 @@ Este repositório contém dois projetos separados: um projeto Spring Boot em Jav
    cd prospect
    ```
 
-3. Compile o projeto e empacote-o com o Maven:
+3. Defina o .env:
+   copie o conteúdo do `sample.env` par aum arquivo `.env` e altere de acordo com suas necessidades
+
+4. Compile o projeto e empacote-o com o Maven:
 
    ```bash
    mvn clean install
    ```
 
-4. Execute o aplicativo Spring Boot:
+5. Execute o aplicativo Spring Boot:
 
    ```bash
    mvn spring-boot:run
@@ -53,19 +52,22 @@ Este repositório contém dois projetos separados: um projeto Spring Boot em Jav
    cd prospect-web
    ```
 
-2. Instale as dependências do projeto Node.js:
+2. Defina o .env:
+   copie o conteúdo do `sample.env` par aum arquivo `.env` e altere de acordo com suas necessidades
+
+3. Instale as dependências do projeto Node.js:
 
    ```bash
    npm install
    ```
 
-3. Inicie o servidor de desenvolvimento:
+4. Inicie o servidor de desenvolvimento:
 
    ```bash
-   npm start
+   npm run dev
    ```
 
-   O aplicativo web estará acessível em http://localhost:3000.
+   O aplicativo web estará acessível na porta definida no arquivo `prospect-web/vite.config.ts`.
 
 ## Licença
 

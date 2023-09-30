@@ -11,6 +11,7 @@ const StyledContent = styled(Layout.Content)`
     padding: 20px;
     display: flex;
     justify-content: center;
+    overflow-y: auto;
 
     transition: font-size 0.3s ease;
 

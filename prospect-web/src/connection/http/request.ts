@@ -2,11 +2,11 @@ const DEFAULT_HEADERS: HeadersInit = {
   accept: 'application/json',
 };
 
-type RequestInit = Parameters<typeof fetch>[1];
+type Options = { body?: object } & Omit<RequestInit, 'body'>;
 
 export default async function request(
   url: string,
-  options: RequestInit = {}
+  options: Options = {}
 ): Promise<Response> {
   const headers: Headers = new Headers({
     ...DEFAULT_HEADERS,

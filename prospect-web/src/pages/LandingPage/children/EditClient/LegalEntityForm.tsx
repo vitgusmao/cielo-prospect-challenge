@@ -1,47 +1,43 @@
 /* eslint-disable no-template-curly-in-string */
 
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-import InputCNPJ from '../../../../components/InputCNPJ';
+import { LegalEntity } from '../../../../@types';
 import InputCPF from '../../../../components/InputCPF';
 import InputMCC from '../../../../components/InputMCC';
 import { getApiEndpoint } from '../../../../data';
 import Button from '../../../../facades/Button';
+import Descriptions from '../../../../facades/Descriptions';
 import Divider from '../../../../facades/Divider';
 import Form from '../../../../facades/Form';
 import Input from '../../../../facades/Input';
 import Space from '../../../../facades/Space';
-import useHttpPost from '../../../../hooks/useHttpPost';
+import useHttpPut from '../../../../hooks/useHttpPut';
 
 import validateCPF from './validateCpf';
 
-function LegalEntityForm() {
+function LegalEntityForm({ client }: { client: LegalEntity }) {
   const navigate = useNavigate();
-  const post = useHttpPost(getApiEndpoint('/legal-entities'));
+  const put = useHttpPut(getApiEndpoint(`/clients/${client.id}`));
+
   return (
     <Form
       colon={false}
       layout="vertical"
       onFinish={async (values) => {
-        const ok = await post(values, 'cliente cadastrado com sucesso');
+        const ok = await put(values, 'cliente editado com sucesso');
         if (ok) {
           navigate('/clients');
         }
       }}
     >
-      <Form.Item
-        label="CNPJ"
-        name="cnpj"
-        rules={[{ required: true, message: 'CNPJ deve ser informado!' }]}
-        validateFirst
-      >
-        <InputCNPJ />
-      </Form.Item>
+      <Descriptions>
+        <Descriptions.Item label="CNPJ">{client.cnpj}</Descriptions.Item>
+      </Descriptions>
       <Form.Item
         label="razão social"
         name="corporateReason"
         rules={[
-          { required: true, message: 'razão social deve ser informada!' },
           {
             required: true,
             message: 'razão não pode conter mais de 50 caracteres!',
@@ -57,7 +53,6 @@ function LegalEntityForm() {
         name="mcc"
         tooltip="Merchant Category Code"
         rules={[
-          { required: true, message: 'MMC deve ser informado!' },
           {
             required: true,
             message: 'MMC só pode conter números!',
@@ -79,7 +74,6 @@ function LegalEntityForm() {
         label="CPF"
         name="cpf"
         rules={[
-          { required: true, message: 'CPF do contato deve ser informado!' },
           {
             required: true,
             message: 'CPF só pode conter números!',
@@ -101,7 +95,6 @@ function LegalEntityForm() {
         label="nome"
         name="name"
         rules={[
-          { required: true, message: 'nome do contato deve ser informado!' },
           {
             required: true,
             message: 'nome do contato não pode conter mais de 50 caracteres!',
@@ -115,20 +108,22 @@ function LegalEntityForm() {
       <Form.Item
         label="e-mail"
         name="email"
-        rules={[
-          { required: true, message: 'e-mail do contato deve ser informado!' },
-          { required: true, type: 'email', message: 'e-mail inválido!' },
-        ]}
+        rules={[{ required: true, type: 'email', message: 'e-mail inválido!' }]}
         validateFirst
       >
         <Input />
       </Form.Item>
       <Space>
         <Button htmlType="submit" type="primary">
-          Cadastrar
+          Salvar
         </Button>
-        <Button danger>
-          <Link to="/clients">Cancelar</Link>
+        <Button
+          danger
+          onClick={() => {
+            navigate('/clients');
+          }}
+        >
+          Cancelar
         </Button>
       </Space>
     </Form>

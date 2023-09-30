@@ -5,7 +5,6 @@ import Layout from '../../facades/Layout';
 import Content from './Content';
 import Footer from './Footer';
 import Header from './Header';
-import Sider from './Sider';
 
 const StyledLayout = styled(Layout)`
   height: 100%;
@@ -17,10 +16,7 @@ function LandingPage() {
   return (
     <StyledLayout>
       <Header />
-      <Layout hasSider>
-        <Sider />
-        <Content />
-      </Layout>
+      <Content />
       <Footer />
     </StyledLayout>
   );
