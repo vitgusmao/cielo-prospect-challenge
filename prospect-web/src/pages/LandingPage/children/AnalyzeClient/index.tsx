@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { FaPlus } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
@@ -31,15 +31,19 @@ function AnalyzeClient() {
   const post = useHttpPost(getApiEndpoint('/prospects'), {
     expectedStatus: 200,
   });
+  const requested = useRef(false);
 
   useEffect(() => {
-    post().then((body) => {
-      if (body) {
-        setProspect(body);
-      } else {
-        setEmptyQueue(true);
-      }
-    });
+    if (!requested.current) {
+      post().then((body) => {
+        if (body) {
+          setProspect(body);
+        } else {
+          setEmptyQueue(true);
+        }
+      });
+      requested.current = true;
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -81,7 +85,7 @@ function isProspectValid(
   prospect: unknown
 ): prospect is Record<string, string> {
   return (
-    !prospect &&
+    !!prospect &&
     prospect !== null &&
     typeof prospect === 'object' &&
     'id' in prospect

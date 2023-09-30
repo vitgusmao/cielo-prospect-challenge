@@ -19,6 +19,16 @@ const StyledMeta = styled(List.Item.Meta)`
   margin-block-end: 0 !important;
 `;
 
+const statusMapping: Record<
+  ClientType['status'],
+  { color: string; label: string }
+> = {
+  NOT_PROCESSED: { color: 'orange', label: 'NÃO AVALIADO' },
+  PROCESSING: { color: 'blue', label: 'PROCESSANDO' },
+  REJECTED: { color: 'red', label: 'REJEITADO' },
+  ACCEPTED: { color: 'green', label: 'ACEITO' },
+};
+
 function ListItem({ client }: { client: ClientType }) {
   const navigate = useNavigate();
   if (isLegalEntity(client)) {
@@ -56,7 +66,9 @@ function ListItem({ client }: { client: ClientType }) {
               </Descriptions>
             </div>
             <div>
-              <Tag color="error">{client.status}</Tag>
+              <Tag color={statusMapping[client.status].color}>
+                {statusMapping[client.status].label}
+              </Tag>
             </div>
           </StyledDescription>
         }
@@ -95,7 +107,9 @@ function ListItem({ client }: { client: ClientType }) {
             </Descriptions>
           </div>
           <div>
-            <Tag color="error">{client.status}</Tag>
+            <Tag color={statusMapping[client.status].color}>
+              {statusMapping[client.status].label}
+            </Tag>
           </div>
         </StyledDescription>
       }
