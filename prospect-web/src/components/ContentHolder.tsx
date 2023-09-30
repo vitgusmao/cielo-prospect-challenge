@@ -17,6 +17,7 @@ const StyledDiv = styled.div`
     align-items: center;
     column-gap: 8px;
     margin-bottom: 10px;
+    flex-wrap: wrap;
   }
   .content-title {
     padding-left: 12px;
