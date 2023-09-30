@@ -1,5 +1,7 @@
 package com.adacielochallenge.prospect.model;
 
+import com.adacielochallenge.prospect.dto.ClientUpdateDTO;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
@@ -30,4 +32,21 @@ public class NaturalPerson extends Client {
 
     @Setter
     private String email;
+
+    @Override
+    public void update(ClientUpdateDTO updateDTO) {
+        String cpf = updateDTO.getCpf();
+        String name = updateDTO.getName();
+        String email = updateDTO.getEmail();
+
+        if (cpf != null) {
+            this.setCpf(cpf);
+        } else if (name != null) {
+            this.setName(name);
+        } else if (email != null) {
+            this.setEmail(email);
+        }
+
+        super.update(updateDTO);
+    }
 }

@@ -9,6 +9,10 @@
     "streetsidesoftware.code-spell-checker-portuguese-brazilian",
     "mhutchie.git-graph",
     "eamodio.gitlens",
-    "esbenp.prettier-vscode"
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "styled-components.vscode-styled-components",
+    "naumovs.color-highlight",
+    "gruntfuggly.auto-snippet"
   ]
 }

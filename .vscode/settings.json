@@ -1,4 +1,10 @@
 {
+  "autoSnippet.snippets": [
+    {
+      "language": "typescriptreact",
+      "snippet": "new-file-react-function-component"
+    }
+  ],
   "editor.formatOnSave": true,
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
@@ -7,7 +13,13 @@
     "editor.defaultFormatter": "redhat.java",
     "editor.codeActionsOnSave": { "source.fixAll": true }
   },
-  "cSpell.words": ["adacielochallenge", "cnpj", "Configurer", "prospec"],
+  "cSpell.words": [
+    "adacielochallenge",
+    "cnpj",
+    "Configurer",
+    "dotenv",
+    "prospec"
+  ],
   "cSpell.language": "en,pt,pt_BR",
   "java.autobuild.enabled": true,
   "java.compile.nullAnalysis.mode": "automatic",
@@ -18,5 +30,18 @@
   "java.editor.reloadChangedSources": "auto",
   "java.maven.updateSnapshots": true,
   "maven.pomfile.autoUpdateEffectivePOM": true,
-  "maven.view": "hierarchical"
+  "maven.view": "hierarchical",
+
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true
+    }
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true
+    }
+  }
 }

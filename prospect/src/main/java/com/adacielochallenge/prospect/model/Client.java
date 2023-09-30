@@ -2,6 +2,8 @@ package com.adacielochallenge.prospect.model;
 
 import java.util.Date;
 
+import com.adacielochallenge.prospect.dto.ClientUpdateDTO;
+
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.DiscriminatorType;
 import jakarta.persistence.Entity;
@@ -36,7 +38,20 @@ public class Client {
     private Date createdOn = new Date();
 
     @Setter
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date updatedOn = this.createdOn;
+
+    @Setter
     @NotNull
     private ProspectStatus status = ProspectStatus.NOT_PROCESSED;
+
+    public void update(ProspectStatus status) {
+        this.setUpdatedOn(new Date());
+        this.setStatus(status);
+    }
+
+    public void update(ClientUpdateDTO updateDTO) {
+        this.setUpdatedOn(new Date());
+    }
 
 }

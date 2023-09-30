@@ -12,5 +12,12 @@
       "cwd": "${workspaceFolder}/prospect",
       "type": "java"
     }
+    // {
+    //   "name": "ProspectWeb",
+    //   "request": "launch",
+    //   "runtimeArgs": ["run", "dev"],
+    //   "runtimeExecutable": "npm",
+    //   "type": "node"
+    // }
   ]
 }

@@ -20,8 +20,6 @@ public class LegalEntityCreateDTOTest {
     private Set<ConstraintViolation<LegalEntityCreateDTO>> violations;
     private ConstraintViolation<LegalEntityCreateDTO> violation;
 
-    private final String nullViolationMessage = "must not be null";
-
     @BeforeEach
     public void setUp() {
         legalEntityCreateDTO = new LegalEntityCreateDTO();
@@ -40,7 +38,6 @@ public class LegalEntityCreateDTOTest {
     @Test
     public void testCnpjValidation() {
         String propertyName = "cnpj";
-        String violationMessage = "CNPJ must have 14 digits";
 
         // valid cnpj
         legalEntityCreateDTO.setCnpj("12345678901234");
@@ -53,7 +50,7 @@ public class LegalEntityCreateDTOTest {
         violation = violations.iterator().next();
         assertEquals(1, violations.size());
         assertEquals(propertyName, violation.getPropertyPath().toString());
-        assertEquals(violationMessage, violation.getMessage());
+        assertEquals("cnpj deve conter exatamente 14 dígitos.", violation.getMessage());
 
         // more then 14 digits
         legalEntityCreateDTO.setCnpj("123546664463634");
@@ -61,15 +58,15 @@ public class LegalEntityCreateDTOTest {
         violation = violations.iterator().next();
         assertEquals(1, violations.size());
         assertEquals(propertyName, violation.getPropertyPath().toString());
-        assertEquals(violationMessage, violation.getMessage());
+        assertEquals("cnpj deve conter exatamente 14 dígitos.", violation.getMessage());
 
         // letters inside
-        legalEntityCreateDTO.setCnpj("12354666f46g634");
+        legalEntityCreateDTO.setCnpj("1235666f46g634");
         violations = validator.validate(legalEntityCreateDTO);
         violation = violations.iterator().next();
         assertEquals(1, violations.size());
         assertEquals(propertyName, violation.getPropertyPath().toString());
-        assertEquals(violationMessage, violation.getMessage());
+        assertEquals("cnpj só pode assumir valores numéricos", violation.getMessage());
 
         // null
         legalEntityCreateDTO.setCnpj(null);
@@ -77,13 +74,12 @@ public class LegalEntityCreateDTOTest {
         violation = violations.iterator().next();
         assertEquals(1, violations.size());
         assertEquals(propertyName, violation.getPropertyPath().toString());
-        assertEquals(nullViolationMessage, violation.getMessage());
+        assertEquals("cnpj não pode ser vazio.", violation.getMessage());
     }
 
     @Test
     public void testCorporateReasonValidation() {
         String propertyName = "corporateReason";
-        String violationMessage = "corporate reason must not exceed 50 characters";
 
         // valid corporateReason
         legalEntityCreateDTO.setCorporateReason("Razão Social");
@@ -96,7 +92,7 @@ public class LegalEntityCreateDTOTest {
         violation = violations.iterator().next();
         assertEquals(1, violations.size());
         assertEquals(propertyName, violation.getPropertyPath().toString());
-        assertEquals(violationMessage, violation.getMessage());
+        assertEquals("razão social não pode ter mais de 50 caracteres", violation.getMessage());
 
         // null
         legalEntityCreateDTO.setCorporateReason(null);
@@ -104,14 +100,13 @@ public class LegalEntityCreateDTOTest {
         violation = violations.iterator().next();
         assertEquals(1, violations.size());
         assertEquals(propertyName, violation.getPropertyPath().toString());
-        assertEquals(nullViolationMessage, violation.getMessage());
+        assertEquals("razão social não pode ser vazio.", violation.getMessage());
 
     }
 
     @Test
     public void testMccValidation() {
         String propertyName = "mcc";
-        String violationMessage = "'Merchant Category Code' must not exceed 4 digits";
 
         // valid mcc
         legalEntityCreateDTO.setMcc("1234");
@@ -124,7 +119,7 @@ public class LegalEntityCreateDTOTest {
         violation = violations.iterator().next();
         assertEquals(1, violations.size());
         assertEquals(propertyName, violation.getPropertyPath().toString());
-        assertEquals(violationMessage, violation.getMessage());
+        assertEquals("'Merchant Category Code' não deve exceder 4 caracteres.", violation.getMessage());
 
         // letters inside
         legalEntityCreateDTO.setMcc("12ab");
@@ -132,7 +127,7 @@ public class LegalEntityCreateDTOTest {
         violation = violations.iterator().next();
         assertEquals(1, violations.size());
         assertEquals(propertyName, violation.getPropertyPath().toString());
-        assertEquals(violationMessage, violation.getMessage());
+        assertEquals("'Merchant Category Code' só pode assumir valores numéricos.", violation.getMessage());
 
         // null
         legalEntityCreateDTO.setMcc(null);
@@ -140,16 +135,13 @@ public class LegalEntityCreateDTOTest {
         violation = violations.iterator().next();
         assertEquals(1, violations.size());
         assertEquals(propertyName, violation.getPropertyPath().toString());
-        assertEquals(nullViolationMessage, violation.getMessage());
+        assertEquals("'Merchant Category Code' não pode ser vazio.", violation.getMessage());
 
     }
 
     @Test
     public void testContactCpfValidation() {
         String propertyName = "cpf";
-        String violationMessage = "cpf must have 11 digits";
-        Set<ConstraintViolation<LegalEntityCreateDTO>> violations;
-        ConstraintViolation<LegalEntityCreateDTO> violation;
 
         // valid cpf
         legalEntityCreateDTO.setCpf("12345678901");
@@ -162,7 +154,7 @@ public class LegalEntityCreateDTOTest {
         violation = violations.iterator().next();
         assertEquals(1, violations.size());
         assertEquals(propertyName, violation.getPropertyPath().toString());
-        assertEquals(violationMessage, violation.getMessage());
+        assertEquals("cpf deve conter exatamente 11 dígitos.", violation.getMessage());
 
         // less than 11 digits
         legalEntityCreateDTO.setCpf("123456789012");
@@ -170,7 +162,7 @@ public class LegalEntityCreateDTOTest {
         violation = violations.iterator().next();
         assertEquals(1, violations.size());
         assertEquals(propertyName, violation.getPropertyPath().toString());
-        assertEquals(violationMessage, violation.getMessage());
+        assertEquals("cpf deve conter exatamente 11 dígitos.", violation.getMessage());
 
         // letters inside
         legalEntityCreateDTO.setCpf("123456789ab");
@@ -178,21 +170,21 @@ public class LegalEntityCreateDTOTest {
         violation = violations.iterator().next();
         assertEquals(1, violations.size());
         assertEquals(propertyName, violation.getPropertyPath().toString());
-        assertEquals(violationMessage, violation.getMessage());
+        assertEquals("cpf só pode assumir valores numéricos", violation.getMessage());
 
         // null
         legalEntityCreateDTO.setCpf(null);
         violations = validator.validate(legalEntityCreateDTO);
+        violation = violations.iterator().next();
         assertEquals(1, violations.size());
         assertEquals(propertyName, violation.getPropertyPath().toString());
-        assertEquals(violationMessage, violation.getMessage());
+        assertEquals("cpf não pode ser vazio.", violation.getMessage());
 
     }
 
     @Test
     public void testContactNameValidation() {
         String propertyName = "name";
-        String violationMessage = "name must not exceed 50 characters";
 
         // valid name
         legalEntityCreateDTO.setName("Contact Name");
@@ -205,7 +197,7 @@ public class LegalEntityCreateDTOTest {
         violation = violations.iterator().next();
         assertEquals(1, violations.size());
         assertEquals(propertyName, violation.getPropertyPath().toString());
-        assertEquals(violationMessage, violation.getMessage());
+        assertEquals("nome não pode ter mais de 50 caracteres", violation.getMessage());
 
         // null
         legalEntityCreateDTO.setName(null);
@@ -213,14 +205,14 @@ public class LegalEntityCreateDTOTest {
         violation = violations.iterator().next();
         assertEquals(1, violations.size());
         assertEquals(propertyName, violation.getPropertyPath().toString());
-        assertEquals(nullViolationMessage, violation.getMessage());
+        assertEquals("nome não pode ser vazio.", violation.getMessage());
 
     }
 
     @Test
     public void testContactEmailValidation() {
         String propertyName = "email";
-        String violationMessage = "email must be a valid e-mail";
+        String violationMessage = "e-mail deve ser um e-mail válido";
 
         // valid email
         legalEntityCreateDTO.setEmail("test@example.com");
@@ -281,7 +273,7 @@ public class LegalEntityCreateDTOTest {
         violation = violations.iterator().next();
         assertEquals(1, violations.size());
         assertEquals(propertyName, violation.getPropertyPath().toString());
-        assertEquals(nullViolationMessage, violation.getMessage());
+        assertEquals("e-mail não pode ser vazio.", violation.getMessage());
 
     }
 
