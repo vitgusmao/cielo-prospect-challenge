@@ -17,7 +17,7 @@ export default function useHttpGet<T>(url: string, options?: GetOptions) {
         });
       })
       .catch((reason) => {
-        message.error(reason);
+        message.error(String(reason));
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
