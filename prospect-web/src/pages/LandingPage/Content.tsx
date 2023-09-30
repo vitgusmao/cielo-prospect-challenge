@@ -25,9 +25,6 @@ const StyledContent = styled(Layout.Content)`
 
     .content-container {
       flex: 1;
-      @media screen and (min-width: 768px) and (max-width: 1024px) {
-        max-width: 456px;
-      }
 
       @media screen and (min-width: 1024px) {
         max-width: 920px;
